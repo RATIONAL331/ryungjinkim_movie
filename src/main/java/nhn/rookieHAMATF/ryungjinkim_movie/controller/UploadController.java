@@ -1,6 +1,7 @@
 package nhn.rookieHAMATF.ryungjinkim_movie.controller;
 
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
 import nhn.rookieHAMATF.ryungjinkim_movie.dto.UploadResultDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +52,12 @@ public class UploadController {
 
             try {
                 uploadFile.transferTo(savePath);
+
+                String thumbnailSaveName = uploadPath + File.separator
+                        + folderPath + File.separator + "s_" + uuid + "_" + fileName;
+                File thumbnailFile = new File(thumbnailSaveName);
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
+
                 resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,9 +69,7 @@ public class UploadController {
     private String makeFolder() {
 
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-
         String folderPath =  str.replace("/", File.separator);
-
         File uploadPathFolder = new File(uploadPath, folderPath);
 
         if (uploadPathFolder.exists() == false) {
