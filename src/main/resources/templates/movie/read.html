@@ -206,6 +206,39 @@
 
                     $('.reviewModal').modal('show');
                 });
+
+                $(".modifyBtn").on("click", function(){
+                    const data = {reviewNum: reviewNum, mno:mno, grade:grade, text:inputText.val(), rid: inputMid.val() };
+                    console.log(data);
+                    $.ajax({
+                        url:'/reviews/'+mno +"/"+ reviewNum ,
+                        type:"PUT",
+                        data:JSON.stringify(data),
+                        contentType:"application/json; charset=UTF-8",
+                        dataType:"text",
+                        success: function(result){
+                            console.log("result: " + result);
+                            self.location.reload();
+                        }
+                    })
+                    reviewModal.modal('hide');
+                });
+
+                $(".removeBtn").on("click", function(){
+                    const data = {reviewNum: reviewNum};
+                    console.log(data);
+                    $.ajax({
+                        url:'/reviews/'+mno +"/"+ reviewNum ,
+                        type:"DELETE",
+                        contentType:"application/json; charset=UTF-8",
+                        dataType:"text",
+                        success: function(result){
+                            console.log("result: " + result);
+                            self.location.reload();
+                        }
+                    })
+                    reviewModal.modal('hide');
+                });
             });
         </script>
     </th:block>
