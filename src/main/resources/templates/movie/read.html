@@ -159,6 +159,9 @@
                         success: function(result){
                             console.log("result: " + result);
                             self.location.reload();
+                        },
+                        error: function(err){
+                            console.log(err);
                         }
                     })
                     reviewModal.modal('hide');
