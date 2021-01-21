@@ -54,6 +54,12 @@
         <button type="button" class="btn btn-primary">
             Review Count <span class="badge badge-light">[[${dto.reviewCnt}]]</span>
         </button>
+        <button type="button" class="btn btn-info addReviewBtn">
+            Review Register
+        </button>
+        <div class="list-group reviewList">
+
+        </div>
 
         <div class="reviewModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -82,8 +88,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
-                        <button type="button" class="btn btn-warning modifyBtn">Modify </button>
-                        <button type="button" class="btn btn-danger removeBtn">Remove </button>
+                        <button type="button" class="btn btn-warning modifyBtn">Modify</button>
+                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
                     </div>
                 </div>
             </div>
@@ -109,9 +115,25 @@
             </div>
         </div>
 
+        <script th:src="@{/starrr.js}"></script>
+        <link th:href="@{/css/starrr.css}" rel="stylesheet">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+
         <script>
             $(document).ready(function(e) {
+                let grade = 0;
+                const mno = [[${dto.mno}]];
 
+                $('.starrr').starrr({
+                    rating: grade,
+                    change: function(e, value){
+                        if (value) {
+                            console.log(value);
+                            grade = value;
+                        }
+                    }
+                });
+                $(".reviewModal").modal("show");
             });
         </script>
     </th:block>
