@@ -9,11 +9,11 @@
         </div>
         <div class="form-group">
             <label >Review Count </label>
-            <input type="text" class="form-control" name="title" th:value="${dto.reviewCnt}" readonly>
+            <input type="text" class="form-control" name="reiviewCnt" th:value="${dto.reviewCnt}" readonly>
         </div>
         <div class="form-group">
             <label >Avg</label>
-            <input type="text" class="form-control" name="title" th:value="${dto.avg}" readonly>
+            <input type="text" class="form-control" name="avg" th:value="${dto.avg}" readonly>
         </div>
 
         <style>
@@ -66,7 +66,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Movie Review</h5>
-
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -74,7 +73,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label >Reviewer ID</label>
-                            <input type="text" class="form-control" name="rid" >
+                            <input type="text" class="form-control" name="mid" >
                         </div>
                         <div class="form-group">
                             <label >Grade<span class="grade"></span></label>
@@ -133,7 +132,80 @@
                         }
                     }
                 });
-                $(".reviewModal").modal("show");
+
+                const reviewModal = $(".reviewModal");
+                const inputMid = $('input[name="mid"]');
+                const inputText = $('input[name="text"]');
+
+                $(".addReviewBtn").click(function () {
+                    inputMid.val("");
+                    inputText.val("");
+
+                    $(".removeBtn ,  .modifyBtn").hide();
+                    $(".reviewSaveBtn").show();
+
+                    reviewModal.modal('show');
+                });
+
+                $('.reviewSaveBtn').click(function() {
+                    const data = {mno:mno, grade:grade, text:inputText.val(), mid: inputMid.val() };
+                    console.log(data);
+                    $.ajax({
+                        url:'/reviews/'+mno,
+                        type:"POST",
+                        data:JSON.stringify(data),
+                        contentType:"application/json; charset=UTF-8",
+                        dataType:"text",
+                        success: function(result){
+                            console.log("result: " + result);
+                            self.location.reload();
+                        }
+                    })
+                    reviewModal.modal('hide');
+                });
+
+                function getMovieReviews() {
+                    function formatTime(str){
+                        const date = new Date(str);
+                        return date.getFullYear() + '/' +
+                            (date.getMonth() + 1) + '/' +
+                            date.getDate() + ' ' +
+                            date.getHours() + ':' +
+                            date.getMinutes();
+                    }
+
+                    $.getJSON("/reviews/"+mno +"/all", function(arr){
+                        let str ="";
+                        $.each(arr, function(idx, review){
+                            console.log(review);
+                            str += '    <div class="card-body" data-reviewNum='+review.reviewNum+' data-mid='+review.mid+'>';
+                            str += '    <h5 class="card-title">'+review.text+' <span> Score: '+ review.grade+'</span></h5>';
+                            str += '    <h6 class="card-subtitle mb-2 text-muted">'+review.nickname+'</h6>';
+                            str += '    <p class="card-text">'+ formatTime(review.regDate) +'</p>';
+                            str += '    </div>';
+                        });
+                        $(".reviewList").html(str);
+                    });
+                }
+                getMovieReviews();
+
+                let reviewNum;
+
+                $(".reviewList").on("click", ".card-body", function() {
+                    $(".reviewSaveBtn").hide();
+                    $(".removeBtn , .modifyBtn").show();
+
+                    var targetReview = $(this);
+                    reviewNum = targetReview.data("reviewNum");
+                    console.log("reviewNum: "+ reviewNum);
+                    inputMid.val(targetReview.data("mid"));
+                    inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
+
+                    const grade = targetReview.find('.card-title span').html();
+                    $(".starrr a:nth-child("+grade+")").trigger('click');
+
+                    $('.reviewModal').modal('show');
+                });
             });
         </script>
     </th:block>
