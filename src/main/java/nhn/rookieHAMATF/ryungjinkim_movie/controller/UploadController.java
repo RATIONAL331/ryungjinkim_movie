@@ -87,6 +87,10 @@ public class UploadController {
             log.info("fileName: " + srcFileName);
             File file = new File(uploadPath +File.separator+ srcFileName);
 
+            if(size != null && size.equals("1")){
+                file = new File(file.getParent(), file.getName().substring(2));
+            }
+
             log.info("file: " + file);
 
             HttpHeaders header = new HttpHeaders();

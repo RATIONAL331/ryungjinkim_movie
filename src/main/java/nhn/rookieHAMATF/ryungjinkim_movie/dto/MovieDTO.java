@@ -22,7 +22,11 @@ public class MovieDTO {
     private List<MovieImageDTO> imageDTOList = new ArrayList<>();
 
     private double avg;
-    private int reviewCnt;
+    private Long reviewCnt;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    public List<MovieImageDTO> getImageDTOList(){
+        return imageDTOList;
+    }
 }

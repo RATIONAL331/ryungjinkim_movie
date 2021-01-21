@@ -12,7 +12,7 @@ import javax.persistence.*;
 @ToString(exclude = {"movie", "member"})
 public class Review extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,6 +22,14 @@ public class Review extends BaseEntity {
     private Member member;
 
     private int grade;
-
     private String text;
+
+    public void changeGrade(int grade){
+        this.grade = grade;
+    }
+
+    public void changeText(String text){
+        this.text = text;
+    }
+
 }
