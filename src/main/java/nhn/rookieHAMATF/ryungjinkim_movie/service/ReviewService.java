@@ -29,6 +29,7 @@ public interface ReviewService {
         ReviewDTO movieReviewDTO = ReviewDTO.builder()
                 .reviewNum(movieReview.getReviewNum())
                 .mno(movieReview.getMovie().getMno())
+                .mid(movieReview.getMember().getMid())
                 .nickname(movieReview.getMember().getNickname())
                 .email(movieReview.getMember().getEmail())
                 .grade(movieReview.getGrade())

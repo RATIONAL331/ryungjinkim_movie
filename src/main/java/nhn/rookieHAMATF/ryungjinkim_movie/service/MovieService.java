@@ -17,6 +17,8 @@ public interface MovieService {
 
     PageResultDTO<MovieDTO, Object[]> getList(PageRequestDTO requestDTO);
     MovieDTO getMovie(Long mno);
+    void modify(Long mno);
+    void remove(Long mno);
 
     default MovieDTO entityToDTO(Movie movie, List<MovieImage> movieImages, Double avg, Long reviewCnt){
         MovieDTO movieDTO = MovieDTO.builder()
@@ -36,7 +38,7 @@ public interface MovieService {
 
         movieDTO.setImageDTOList(movieImageDTOList);
         movieDTO.setAvg(avg);
-        movieDTO.setReviewCnt(reviewCnt.intValue());
+        movieDTO.setReviewCnt(reviewCnt.longValue());
 
         return movieDTO;
     }

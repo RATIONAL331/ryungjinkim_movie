@@ -57,6 +57,9 @@
         <button type="button" class="btn btn-info addReviewBtn">
             Review Register
         </button>
+        <a th:href="@{/movie/list(page=${requestDTO.page})}">
+            <button type="button" class="btn btn-info">List</button>
+        </a>
         <div class="list-group reviewList">
 
         </div>
@@ -181,8 +184,8 @@
                         let str ="";
                         $.each(arr, function(idx, review){
                             console.log(review);
-                            str += '    <div class="card-body" data-reviewNum='+review.reviewNum+' data-mid='+review.mid+'>';
-                            str += '    <h5 class="card-title">'+review.text+' <span> Score: '+ review.grade+'</span></h5>';
+                            str += '    <div id="card-body-'+ idx + '" class="card-body" data-reviewnum='+review.reviewNum+' data-mid='+review.mid+'>';
+                            str += '    <h5 class="card-title">'+review.text+' <span>'+ review.grade+'</span></h5>';
                             str += '    <h6 class="card-subtitle mb-2 text-muted">'+review.nickname+'</h6>';
                             str += '    <p class="card-text">'+ formatTime(review.regDate) +'</p>';
                             str += '    </div>';
@@ -193,25 +196,26 @@
                 getMovieReviews();
 
                 let reviewNum;
-
-                $(".reviewList").on("click", ".card-body", function() {
+                $(".reviewList").on("click", ".card-body", function(event) {
                     $(".reviewSaveBtn").hide();
-                    $(".removeBtn , .modifyBtn").show();
+                    $(".removeBtn").show();
+                    $(".modifyBtn").show();
 
-                    var targetReview = $(this);
-                    reviewNum = targetReview.data("reviewNum");
-                    console.log("reviewNum: "+ reviewNum);
-                    inputMid.val(targetReview.data("mid"));
+                    const targetReview =$(this);
+                    reviewNum = targetReview.attr("data-reviewnum");
+                    inputMid.val(targetReview.attr("data-mid"));
                     inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
 
                     const grade = targetReview.find('.card-title span').html();
+                    console.log(grade);
                     $(".starrr a:nth-child("+grade+")").trigger('click');
 
                     $('.reviewModal').modal('show');
                 });
 
                 $(".modifyBtn").on("click", function(){
-                    const data = {reviewNum: reviewNum, mno:mno, grade:grade, text:inputText.val(), rid: inputMid.val() };
+                    const data = {reviewNum: reviewNum, mno:mno, grade:grade, text:inputText.val(), mid: inputMid.val() };
+
                     console.log(data);
                     $.ajax({
                         url:'/reviews/'+mno +"/"+ reviewNum ,
