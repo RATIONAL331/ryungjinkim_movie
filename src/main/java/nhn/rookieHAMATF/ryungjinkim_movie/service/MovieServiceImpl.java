@@ -35,6 +35,8 @@ public class MovieServiceImpl implements MovieService{
         Movie movie = (Movie)entityMap.get("movie");
         List<MovieImage> movieImageList = (List<MovieImage>)entityMap.get("imgList");
 
+        movieRepository.save(movie);
+
         movieImageList.forEach(movieImage ->{
             imageRepository.save(movieImage);
         });
